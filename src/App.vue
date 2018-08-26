@@ -14,25 +14,30 @@
             <ul class="main-type">
                 <li class="untaskcount">当前还有 {{filterList}} 个任务未完成</li>
                 <li class="tasktypes">
-                    <a href="#unfinished">未完成任务</a>
+                    <!-- <a href="#unfinished">未完成任务</a>
                     <a href="#finished">完成任务</a>
-                    <a href="#all">所有任务</a>
+                    <a href="#all">所有任务</a> -->
+                    <router-link :to="{name: 'unfinished'}">未完成任务</router-link>
+                    <router-link :to="{name: 'finished'}">完成任务</router-link>
+                    <router-link :to="{name: 'all'}">所有任务</router-link>
                 </li>
             </ul>
             <h3 class="list-title">任务列表:</h3>
-            <div class="main-list">
-                <h1 class="notask" v-show="!list.length">当前无任务</h1>
-                <ul class="todo-list">
-                    <li class="item" v-for="(item, index) in filterCheck" :key="index" :class="{completed:item.checked, editing:isEditing === item}">
-                        <div class="content">
-                            <input type="checkbox" class="check" v-model="item.checked">
-                            <label @dblclick="editItem(item)">{{item.content}}</label>
-                            <button class="delete" @click="deleteItem(item)">X</button>
-                        </div>
-                        <input type="text" class="edit" :class="{hide: isEditing !== item}" v-focus="isEditing === item" v-model="item.content" @keyup.enter="edited" @blur="edited" @keyup.esc="cancelEdit(item)">
-                    </li>
-                </ul>
-            </div>
+            <router-view>
+                <div class="main-list">
+                    <h1 class="notask" v-show="!list.length">当前无任务</h1>
+                    <ul class="todo-list">
+                        <li class="item" v-for="(item, index) in filterCheck" :key="index" :class="{completed:item.checked, editing:isEditing === item}">
+                            <div class="content">
+                                <input type="checkbox" class="check" v-model="item.checked">
+                                <label @dblclick="editItem(item)">{{item.content}}</label>
+                                <button class="delete" @click="deleteItem(item)">X</button>
+                            </div>
+                            <input type="text" class="edit" :class="{hide: isEditing !== item}" v-focus="isEditing === item" v-model="item.content" @keyup.enter="edited" @blur="edited" @keyup.esc="cancelEdit(item)">
+                        </li>
+                    </ul>
+                </div>
+            </router-view>  
         </div>
     </div>
 </template>
@@ -63,6 +68,9 @@
                     myLocalStorage.save('todolist', this.list);
                 }
             },
+            $route(to, from) {
+                this.view = to.name;
+            }
         },
         methods: {
             addItem() {
@@ -118,12 +126,12 @@
                 }
             }
         },
-        beforeCreate() {
-            window.addEventListener('hashchange', () => {
-                var hash = window.location.hash.slice(1);
-                this.view = hash;
-            });
-        },
+        // beforeCreate() {
+        //     window.addEventListener('hashchange', () => {
+        //         var hash = window.location.hash.slice(1);
+        //         this.view = hash;
+        //     });
+        // },
         created() {
             this.list = myLocalStorage.get('todolist') || [];
         }
