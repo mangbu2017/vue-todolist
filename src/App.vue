@@ -7,9 +7,11 @@
         </div>
         <div class="todo-main">
             <div class="main-input">
-                <input type="text" class="todo-input" v-model="inputValue"
-                @keyup.enter="addItem">
-                <div class="todo-btn" @click="addItem">添加任务</div>
+                <Input  class="todo-input" v-model="inputValue" placeholder="enter your todos" @keyup.native.enter="addItem"/>
+                <!-- <input type="text" class="todo-input" v-model="inputValue"
+                @keyup.enter="addItem"> -->
+                <!-- <div class="todo-btn" @click="addItem">添加任务</div> -->
+                <Button class="todo-btn" type="success" @click="addItem">添加任务</Button>
             </div>
             <ul class="main-type">
                 <li class="untaskcount">当前还有 {{filterList}} 个任务未完成</li>
@@ -17,9 +19,10 @@
                     <!-- <a href="#unfinished">未完成任务</a>
                     <a href="#finished">完成任务</a>
                     <a href="#all">所有任务</a> -->
-                    <router-link :to="{name: 'unfinished'}">未完成任务</router-link>
-                    <router-link :to="{name: 'finished'}">完成任务</router-link>
-                    <router-link :to="{name: 'all'}">所有任务</router-link>
+                    
+                    <router-link :to="{name: 'unfinished'}" is="Button" type="primary">未完成任务</router-link>
+                    <router-link :to="{name: 'finished'}" is="Button" type="primary">完成任务</router-link>
+                    <router-link :to="{name: 'all'}" is="Button" type="primary">所有任务</router-link>
                 </li>
             </ul>
             <h3 class="list-title">任务列表:</h3>
@@ -29,11 +32,12 @@
                     <ul class="todo-list">
                         <li class="item" v-for="(item, index) in filterCheck" :key="index" :class="{completed:item.checked, editing:isEditing === item}">
                             <div class="content">
-                                <input type="checkbox" class="check" v-model="item.checked">
-                                <label @dblclick="editItem(item)">{{item.content}}</label>
+                                <Checkbox v-model="item.checked" @dblclick.native="editItem(item)">{{item.content}}</Checkbox>
                                 <button class="delete" @click="deleteItem(item)">X</button>
                             </div>
-                            <input type="text" class="edit" :class="{hide: isEditing !== item}" v-focus="isEditing === item" v-model="item.content" @keyup.enter="edited" @blur="edited" @keyup.esc="cancelEdit(item)">
+                            <Input  class="edit" :class="{hide: isEditing !== item}" 
+                            v-focus="isEditing === item" v-model="item.content" 
+                            @keyup.native.enter="edited" @blur.native="edited" @keyup.native.esc="cancelEdit(item)"/>
                         </li>
                     </ul>
                 </div>
@@ -197,15 +201,15 @@
                 justify-content: space-between;
                 .todo-input {
                     width: 60%;
-                    height: 30px;
-                    padding: 0 15px;
+                    // height: 30px;
+                    // padding: 0 15px;
                     margin-left: 30px;
-                    border-radius: 20px;
-                    border-width: 0px;
-                    outline: none;
+                    // border-radius: 20px;
+                    // border-width: 0px;
+                    // outline: none;
                 }
                 .todo-btn {
-                    .btn;
+                    // .btn;
                     margin-right: 100px;
                 }
             }
@@ -218,7 +222,7 @@
                 .tasktypes {
                     .clear;
                     a {
-                        .btn;
+                        // .btn;
                         float: right;
                         margin-right: 10px;
                     }
@@ -235,7 +239,9 @@
                     text-align: center;
                 }
                 .todo-list {
+                    
                     .item {
+                        height: 35px;
                         &.completed {
                             opacity: .3;
                             label {
@@ -257,7 +263,7 @@
                                 width: 450px;
                             }
                             .delete {
-                                width: 25px;
+                                width: 45px;
                             }
                         }
                         .edit {
