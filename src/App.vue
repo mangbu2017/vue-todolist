@@ -42,6 +42,9 @@
     </div>
 </template>
 <script>
+    import { mapState } from 'vuex';
+    import { mapMutations } from 'vuex';
+
     var myLocalStorage = {
         save(key, value) {
             localStorage.setItem(key, JSON.stringify(value));
@@ -54,11 +57,7 @@
     export default {
         data() {
             return {
-                list: [],
-                inputValue: '',
-                isEditing: '',
-                beforeEditing: '',
-                view: 'all',
+                inputValue: ''
             }
         },
         watch: {
@@ -69,33 +68,39 @@
                 }
             },
             $route(to, from) {
-                this.view = to.name;
+                this.setView(to.name);
             }
         },
         methods: {
+            ...mapMutations({
+                setIsEditing: 'SET_ISEDITING', 
+                setBeforeEditing: 'SET_BEFOREEDITING', 
+                setView: 'SET_VIEW', 
+                pushList: 'PUSH_LIST', 
+                deleteList: 'DELETE_LIST'
+            }),
             addItem() {
-                this.list.push({
+                this.pushList({
                     content: this.inputValue,
                     checked: false
                 })
-                this.inputValue = "";
+                this.inputValue = '';
             },
             deleteItem(item) {
-                var index = this.list.indexOf(item);
-                this.list.splice(index, 1);
+                console.log(item);
+                this.deleteList(item);
             },
             editItem(item) {
-                console.log(item);
-                this.isEditing = item;
-                this.beforeEditing = item.content;
+                this.setIsEditing(item);
+                this.setBeforeEditing(item.content);
             },
             edited() {
-                this.isEditing = "";
+                this.setIsEditing('');
             },
-            cancelEdit(todo) {
-                todo.content = this.beforeEditing;
-                this.beforeEditing = '';
-                this.isEditing = '';
+            cancelEdit(item) {
+                item.content = this.beforeEditing;
+                this.setBeforeEditing('');
+                this.setIsEditing('');
             }
         },
         directives: {
@@ -108,6 +113,12 @@
             }
         },
         computed: {
+            ...mapState({
+                list: state => state.list,
+                isEditing: state => state.isEditing,
+                beforeEditing: state => state.beforeEditing,
+                view: state => state.view
+            }),
             filterList() {
                 return this.list.filter(function(item){return !item.checked}).length;
             },
@@ -132,9 +143,9 @@
         //         this.view = hash;
         //     });
         // },
-        created() {
-            this.list = myLocalStorage.get('todolist') || [];
-        }
+        // created() {
+        //     this.list = myLocalStorage.get('todolist') || [];
+        // }
     }
 </script>
 <style lang="less">
