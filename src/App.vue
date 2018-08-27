@@ -48,6 +48,8 @@
 <script>
     import { mapState } from 'vuex';
     import { mapMutations } from 'vuex';
+    import Vue from 'vue';
+    import Component from 'vue-class-component';
 
     var myLocalStorage = {
         save(key, value) {
@@ -58,12 +60,7 @@
         }
     }
 
-    export default {
-        data() {
-            return {
-                inputValue: ''
-            }
-        },
+    @Component({
         watch: {
             list: {
                 deep: true,
@@ -140,16 +137,11 @@
                         });
                 }
             }
-        },
-        // beforeCreate() {
-        //     window.addEventListener('hashchange', () => {
-        //         var hash = window.location.hash.slice(1);
-        //         this.view = hash;
-        //     });
-        // },
-        // created() {
-        //     this.list = myLocalStorage.get('todolist') || [];
-        // }
+        }
+    })
+
+    export default class App extends Vue {
+        inputValue = '';
     }
 </script>
 <style lang="less">
